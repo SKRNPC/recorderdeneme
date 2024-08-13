@@ -31,7 +31,7 @@ const OpenUrlButton = () => {
         type="text"
         value={url}
         onChange={(e) => setUrl(e.target.value)}
-        placeholder="https://llrecorder.netlify.app"
+        placeholder="https://loginnrecorder.netlify.app"
       />
       <button onClick={handleOpenUrl}>Open URL</button>
     </div>
