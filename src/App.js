@@ -1,96 +1,41 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 
-const App = () => {
-  const [events, setEvents] = useState([]);
+const OpenUrlButton = () => {
+  const [url, setUrl] = useState("");
 
-  useEffect(() => {
-    const handleMouseClick = (e) => {
-      setEvents((prevEvents) => [
-        ...prevEvents,
-        {
-          type: "click",
-          x: e.clientX,
-          y: e.clientY,
-          timestamp: new Date().toISOString(),
-        },
-      ]);
-    };
+  const handleOpenUrl = () => {
+    if (url) {
+      // URL'nin başındaki önekleri temizle
+      // `http` veya `https` öneki yoksa ekle
+      let fullUrl = url;
+      if (!fullUrl.startsWith("http://") && !fullUrl.startsWith("https://")) {
+        fullUrl = `https://${fullUrl}`;
+      }
 
-    const handleKeyDown = (e) => {
-      setEvents((prevEvents) => [
-        ...prevEvents,
-        {
-          type: "keydown",
-          key: e.key,
-          code: e.code,
-          timestamp: new Date().toISOString(),
-        },
-      ]);
-    };
+      const width = 800;
+      const height = 600;
+      const left = window.innerWidth / 2 - width / 2;
+      const top = window.innerHeight / 2 - height / 2;
 
-    const handleCopy = (e) => {
-      setEvents((prevEvents) => [
-        ...prevEvents,
-        {
-          type: "copy",
-          text: e.clipboardData.getData("text"),
-          timestamp: new Date().toISOString(),
-        },
-      ]);
-    };
-
-    const handlePaste = (e) => {
-      setEvents((prevEvents) => [
-        ...prevEvents,
-        {
-          type: "paste",
-          text: e.clipboardData.getData("text"),
-          timestamp: new Date().toISOString(),
-        },
-      ]);
-    };
-
-    window.addEventListener("click", handleMouseClick);
-    window.addEventListener("keydown", handleKeyDown);
-    window.addEventListener("copy", handleCopy);
-    window.addEventListener("paste", handlePaste);
-
-    return () => {
-      window.removeEventListener("click", handleMouseClick);
-      window.removeEventListener("keydown", handleKeyDown);
-      window.removeEventListener("copy", handleCopy);
-      window.removeEventListener("paste", handlePaste);
-    };
-  }, []);
-
-  const handleSubmit = () => {
-    const blob = new Blob([JSON.stringify(events, null, 2)], {
-      type: "application/json",
-    });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "interaction-data.json";
-    a.click();
-    URL.revokeObjectURL(url);
+      window.open(
+        fullUrl,
+        "newWindow",
+        `width=${width},height=${height},top=${top},left=${left},scrollbars=yes,resizable=yes`
+      );
+    }
   };
 
   return (
     <div>
-      <h1>Recorder</h1>
-      <form>
-        <label>
-          Name:
-          <input type="text" />
-        </label>
-        <label>
-          Email:
-          <input type="email" />
-        </label>
-      </form>
-      <button onClick={handleSubmit}>Download Interaction Data</button>
+      <input
+        type="text"
+        value={url}
+        onChange={(e) => setUrl(e.target.value)}
+        placeholder="Enter URL"
+      />
+      <button onClick={handleOpenUrl}>Open URL</button>
     </div>
   );
 };
 
-export default App;
+export default OpenUrlButton;
