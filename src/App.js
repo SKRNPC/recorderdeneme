@@ -1,12 +1,16 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 const OpenUrlButton = () => {
   const [url, setUrl] = useState("");
 
+  useEffect(() => {
+    // Bileşen yüklendiğinde placeholder URL'sini başlangıç durumu olarak ayarla
+    const defaultUrl = "https://loginnrecorder.netlify.app";
+    setUrl(defaultUrl);
+  }, []);
+
   const handleOpenUrl = () => {
     if (url) {
-      // URL'nin başındaki önekleri temizle
-      // `http` veya `https` öneki yoksa ekle
       let fullUrl = url;
       if (!fullUrl.startsWith("http://") && !fullUrl.startsWith("https://")) {
         fullUrl = `https://${fullUrl}`;
